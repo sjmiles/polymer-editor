@@ -1,7 +1,6 @@
 
 <link rel="import" href="../../polymer/polymer.html">
-
-<link rel="import" href="polymer-editor-content.html">
+<link rel="import" href="polymer-editor-content/polymer-editor-content.html">
 
 <polymer-element name="x-html-span" extends="polymer-editor-content">
   <template>
@@ -28,7 +27,6 @@
             // any type of inline element?
             return context.node.nodeType === Node.TEXT_NODE;
             break;
-
           default:
             return this.super(arguments);
             break;
@@ -39,7 +37,7 @@
         // insertNode will use appendChild or insertBefore; both of which
         // will ensure the context.node gets MOVED if it was already in the dom
         this.insertNode(context);
-      },
+      }
 
     });
 

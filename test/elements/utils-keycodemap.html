@@ -1,9 +1,15 @@
+<!-- dependencies -->
+<link rel="import" href="../../../polymer/polymer.html">
 
+<!-- 
+  TODO(sjmiles): inline script bad for CSP, we can vulcanize out of it, but it's inconvenient;
+  find a third option
+-->
+<script>
 
-define([], function() {
+  'use strict';
 
-    'use strict';
-
+  module('utils-keycodemap', null, function() {
     // Alias and short names.
     var aliases_ = {
       '↵': 'enter',
@@ -157,6 +163,6 @@ define([], function() {
         };
       }
     };
+  });
 
-});
-
+</script>

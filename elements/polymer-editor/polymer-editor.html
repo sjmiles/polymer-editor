@@ -1,0 +1,21 @@
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../utils/utils-preorderiter.html">
+<link rel="import" href="../utils/utils-dom.html">
+<link rel="import" href="../utils/utils-domposition.html">
+<link rel="import" href="../events/events-emitter.html">
+<link rel="import" href="../mock/mock-input.html">
+<link rel="import" href="../mock/mock-selection.html">
+
+<polymer-element name="polymer-editor">
+  <template>
+    <style>
+      :host {
+        -webkit-user-modify: read-write;
+        -webkit-user-select: text;
+      }
+    </style>
+    <content></content>
+  </template>
+</polymer-element>
+
+<script src="polymer-editor.js"></script>

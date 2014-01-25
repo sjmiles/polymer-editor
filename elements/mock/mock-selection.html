@@ -1,3 +1,13 @@
+<!-- dependencies -->
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../utils/utils-domposition.html">
+
+<!--
+  TODO(sjmiles): inline script bad for CSP, we can vulcanize out of it, but it's inconvenient;
+  find a third option
+-->
+<script>
+
 /**
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
@@ -6,7 +16,7 @@
  * @author jelte@google.com (Jelte Liebrand)
  */
 
-define(['core/utils/domPosition'], function(DomPosition) {
+module('mock-selection', ['utils-domposition'], function(DomPosition) {
 
   'use strict';
 
@@ -21,14 +31,11 @@ define(['core/utils/domPosition'], function(DomPosition) {
     },
 
     setStartDomPosition: function(domPosition) {
-      if (domPosition &&
-          domPosition.container && domPosition.offset !== undefined) {
-        var range = document.createRange();
-        range.setStart(domPosition.container, domPosition.offset);
-        var sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-      }
+      var range = document.createRange();
+      range.setStart(domPosition.container, domPosition.offset);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
     },
 
     walkUp: function(callback) {
@@ -61,3 +68,4 @@ define(['core/utils/domPosition'], function(DomPosition) {
   return Selection;
 });
 
+</script>

@@ -1,20 +1,17 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
 <meta charset="UTF-8">
 <head>
   <title>Basic Test</title>
-
-  <link rel="stylesheet" href="../css/test.css">
-
+  <!-- base functionality-->
   <script src="../../../platform/platform.js"></script>
-  <script src="../../../tools/test/htmltest.js"></script>
-  <script src="../../../tools/test/chai/chai.js"></script>
-
-  <script src="../../node_modules/requirejs/require.js"></script>
-
-  <link rel="import" href="../../core/polymer-editor.html"/>
-  <link rel="import" href="../../core/polymer-editor-content.html">
-
+  <!-- common infrastructure -->
+  <link rel="import" href="preamble.html">
+  <!-- test specific imports -->
+  <link rel="import" href="../elements/utils-event.html">
+  <link rel="import" href="../elements/utils-keyboard.html">
+  <link rel="import" href="../elements/utils-text.html">
+  <link rel="import" href="../elements/utils-keys.html">
 </head>
 <body>
 
@@ -26,77 +23,67 @@
   </p>
   <hr/>
 
-  <polymer-editor id="my-editor">hello</polymer-editor>
+  <polymer-editor id="my-editor">
+    <polymer-editor-content>hello</polymer-editor-content>
+  </polymer-editor>
 
   <script type="text/javascript" charset="utf-8">
+    addEventListener('polymer-ready', function() {
 
-  require.config({
-      baseUrl: "../../"
-    });
+      var assert = chai.assert;
 
-  require([
-    'test/utils/eventUtils',
-    'test/utils/keyboard',
-    'test/utils/text',
-    'test/utils/keys',
-    ], function(EventUtils, Keyboard, Text, Keys) {
+      // modularized apis
+      var EventUtils = document.createElement('utils-event').api;
+      var Keyboard = document.createElement('utils-keyboard').api;
+      var Text = document.createElement('utils-text').api;
+      var Keys = document.createElement('utils-keys').api;
 
-    function placeCaret(node, offset) {
-      var range = document.createRange();
-      range.setStart(node, offset);
-      range.setEnd(node, offset);
-      window.getSelection().removeAllRanges();
-      window.getSelection().addRange(range);
-    }
-
-    function test() {
+      // hard codes the element placement based on above html
+      function placeCaret(offset) {
+        var editor = document.querySelector('#my-editor');
+        var content = editor.firstElementChild;
+        var contentTextNode = content.firstChild;
+        var range = document.createRange();
+        range.setStart(contentTextNode, offset);
+        range.setEnd(contentTextNode, offset);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+      }
 
       // make sure we have an editor - should probably test more than
       // just the fact the element is defined... ?
       var editor = document.querySelector('#my-editor');
-      var editor = document.querySelector('polymer-editor');
+      var editorContent = document.querySelector('polymer-editor-content');
       assert.isDefined(editor, 'our editor is defined');
 
       // test insert text at start
-      placeCaret(editor.firstChild, 0);
+      placeCaret(0);
       Keyboard.type(Text('foobar')).then(function(a) {
-        assert.equal(editor.innerText, 'foobarhello');
+        assert.equal(editorContent.innerText, 'foobarhello');
       }).then(function() {
         // test insert text in the middle
-        placeCaret(editor.firstChild, 6);
+        placeCaret(6);
         return Keyboard.type(Text('eggs'));
       }).then(function() {
-        assert.equal(editor.innerText, 'foobareggshello');
+        assert.equal(editorContent.innerText, 'foobareggshello');
       }).then(function() {
 
         // test insert text at the end
-        placeCaret(editor.firstChild, editor.innerText.length);
+        placeCaret(editorContent.innerText.length);
         return Keyboard.type(Text('world'));
       }).then(function() {
-        assert.equal(editor.innerText, 'foobareggshelloworld');
+        assert.equal(editorContent.innerText, 'foobareggshelloworld');
       }).then(function() {
 
         // test backspace
-        placeCaret(editor.firstChild, 6);
+        placeCaret(6);
         return Keyboard.type(Keys("⟵").repeat(6));
       }).then(function() {
-        assert.equal(editor.innerText, 'eggshelloworld');
+        assert.equal(editorContent.innerText, 'eggshelloworld');
       })
       .then(done)
       .catch(onerror);
-    }
-
-    var assert = chai.assert;
-    // TODO(jliebrand): WebComponentsReady fires before the requireJs is
-    // done loading all modules (right?!) so it would fire too soon for
-    // us to run the test
-    // document.addEventListener('WebComponentsReady', test);
-
-    // just wait a second for now; fix this though!
-    setTimeout(test, 1000);
-
-  });
-
+    });
   </script>
 </body>
 </html>

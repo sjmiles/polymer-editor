@@ -1,3 +1,12 @@
+<!-- dependencies -->
+<link rel="import" href="../../../polymer/polymer.html">
+
+<!--
+  TODO(sjmiles): inline script bad for CSP, we can vulcanize out of it, but it's inconvenient;
+  find a third option
+-->
+<script>
+
 /**
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
@@ -9,7 +18,7 @@
  * @author jelte@google.com (Jelte Liebrand)
  */
 
-define([], function() {
+module('events-emitter', [], function() {
 
   'use strict';
 
@@ -34,5 +43,7 @@ define([], function() {
   };
 
   return Emitter;
+
 });
 
+</script>

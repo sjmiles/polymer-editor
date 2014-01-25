@@ -1,0 +1,29 @@
+<!-- dependencies -->
+<link rel="import" href="../../../polymer/polymer.html">
+
+<!-- 
+  TODO(sjmiles): inline script bad for CSP, we can vulcanize out of it, but it's inconvenient;
+  find a third option
+-->
+<script>
+
+  'use strict';
+
+  module('utils-keyboard', null, function() {
+    return {
+      type: function() {
+        var chain = new Promise(function(resolve, reject) {
+          resolve();
+        });
+        for (var i = 0; i < arguments.length; i++) {
+          var arg = arguments[i];
+          if (arg && arg.getPromise) {
+            chain = chain.then(arg.getPromise.bind(arg));
+          }
+        }
+        return chain;
+      }
+    }
+  });
+
+</script>

@@ -1,9 +1,14 @@
+<!-- dependencies -->
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="utils-dom.html">
 
-define([
-  'core/utils/domUtils'
-  ], function(
-    DomUtils
-    ) {
+<!--
+  TODO(sjmiles): inline script bad for CSP, we can vulcanize out of it, but it's inconvenient;
+  find a third option
+-->
+<script>
+
+module('utils-domposition', ['utils-dom'], function(DomUtils) {
 
   'use strict';
 
@@ -118,3 +123,5 @@ define([
 
   return DomPosition;
 });
+
+</script>

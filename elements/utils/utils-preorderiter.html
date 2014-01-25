@@ -1,4 +1,13 @@
-define([], function() {
+<!-- dependencies -->
+<link rel="import" href="../../../polymer/polymer.html">
+
+<!--
+  TODO(sjmiles): inline script bad for CSP, we can vulcanize out of it, but it's inconvenient;
+  find a third option
+-->
+<script>
+
+module('utils-preorderiter', [], function() {
 
   'use strict';
 
@@ -25,10 +34,9 @@ define([], function() {
       return this.getPrev_() !== undefined;
     },
 
-
     getNext_: function() {
       var ref = this.current_;
-      var next = ref ? ref.firstChild : undefined;
+      var next = ref.firstChild;
       while (!next && ref) {
         next = ref.nextSibling;
         ref = ref.parentNode;
@@ -38,7 +46,7 @@ define([], function() {
 
     getPrev_: function() {
       var ref = this.current_;
-      var prev = ref ? ref.previousSibling : undefined;
+      var prev = ref.previousSibling;
       while (prev && prev.lastChild) {
         prev = prev.lastChild;
       }
@@ -51,3 +59,5 @@ define([], function() {
 
   return PreOrderIter;
 });
+
+</script>

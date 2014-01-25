@@ -1,22 +1,21 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
 <meta charset="UTF-8">
 <head>
+
   <title>Delete across elements Test</title>
 
-  <link rel="stylesheet" href="../css/test.css">
-
+  <!-- base functionality-->
   <script src="../../../platform/platform.js"></script>
-  <script src="../../../tools/test/htmltest.js"></script>
-  <script src="../../../tools/test/chai/chai.js"></script>
-
-  <script src="../../node_modules/requirejs/require.js"></script>
-
-  <link rel="import" href="../../core/polymer-editor.html"/>
-  <link rel="import" href="../../core/polymer-editor-content.html">
-
-  <link rel="import" href="../../core/x-html-p.html">
-  <link rel="import" href="../../core/x-html-span.html">
+  <!-- common infrastructure -->
+  <link rel="import" href="preamble.html">
+  <!-- test specific imports -->
+  <link rel="import" href="../elements/utils-event.html">
+  <link rel="import" href="../elements/utils-keyboard.html">
+  <link rel="import" href="../elements/utils-text.html">
+  <link rel="import" href="../elements/utils-keys.html">
+  <link rel="import" href="../../elements/x-html-p.html">
+  <link rel="import" href="../../elements/x-html-span.html">
 
 </head>
 <body>
@@ -30,40 +29,36 @@
   <hr/>
 
   <polymer-editor id="my-editor">
-    <x-html-p>
-      <x-html-span>hello</x-html-span><x-html-span>world</x-html-span>
-    </x-html-p>
-    <x-html-p>
+    <polymer-editor-content>
+      <x-html-p>
+        <x-html-span>hello</x-html-span><x-html-span>world</x-html-span>
+      </x-html-p><x-html-p>
       <x-html-span>something else</x-html-span>
     </x-html-p>
-  </polymer-editor>
+  </polymer-editor-content></polymer-editor>
 
   <script type="text/javascript" charset="utf-8">
 
-  require.config({
-      baseUrl: "../../"
-    });
+    addEventListener('polymer-ready', function() {
+      var assert = chai.assert;
 
-  require([
-    'test/utils/eventUtils',
-    'test/utils/keyboard',
-    'test/utils/text',
-    'test/utils/keys',
-    ], function(EventUtils, Keyboard, Text, Keys) {
+      // modularized apis
+      var EventUtils = document.createElement('utils-event').api;
+      var Keyboard = document.createElement('utils-keyboard').api;
+      var Text = document.createElement('utils-text').api;
+      var Keys = document.createElement('utils-keys').api;
 
-    function placeCaret(node, offset) {
-      var range = document.createRange();
-      range.setStart(node, offset);
-      range.setEnd(node, offset);
-      window.getSelection().removeAllRanges();
-      window.getSelection().addRange(range);
-    }
+      function placeCaret(node, offset) {
+        var range = document.createRange();
+        range.setStart(node, offset);
+        range.setEnd(node, offset);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+      }
 
-    function test() {
-
-      var editor = document.querySelector('polymer-editor');
-      var paras = editor.querySelectorAll('x-html-p');
-      var spans = editor.querySelectorAll('x-html-span');
+      var editorContent = document.querySelector('polymer-editor-content');
+      var paras = editorContent.querySelectorAll('x-html-p');
+      var spans = editorContent.querySelectorAll('x-html-span');
 
       // delete from 2nd span in to 1st span
       placeCaret(spans[1].firstChild, 2);
@@ -83,18 +78,7 @@
       })
       .then(done)
       .catch(onerror);
-    }
-
-    var assert = chai.assert;
-    // TODO(jliebrand): WebComponentsReady fires before the requireJs is
-    // done loading all modules (right?!) so it would fire too soon for
-    // us to run the test
-    // document.addEventListener('WebComponentsReady', test);
-
-    // just wait a second for now; fix this though!
-    setTimeout(test, 1000);
-
-  });
+    });
 
   </script>
 </body>
