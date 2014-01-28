@@ -56,6 +56,7 @@ module('dom-edit',
             var caret = new DomPosition(dp.container.childNodes[tnOffset], 0);
             Selection.setStartDomPosition(caret);
           }
+
           context.dp.container.normalize();
         }
       }

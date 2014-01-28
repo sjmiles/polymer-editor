@@ -28,6 +28,8 @@
 
   using(['type-writer'], function(Writer) {
 
+    renderTestSource();
+
     var assert = chai.assert;
 
     // START TEST
@@ -39,7 +41,7 @@
     assert.isDefined(editor, 'our editor is defined');
 
     // test insert text at start
-    Writer.placeCaret(editor.firstChild, 0);
+    Writer.placeCaret(editor, 0);
     Writer.type('foobar');
     assert.equal(editor.innerText, 'foobarhello');
 
@@ -59,13 +61,15 @@
 
     // END TEST
 
-    var x = document.getElementById('testScript');
-    var y = document.getElementById('testSource');
-    var testFuncStart = x.innerText.search('// START TEST') + 13;
-    var testFuncEnd = x.innerText.search('// END TEST');
-    y.innerText = x.innerText.substring(testFuncStart, testFuncEnd);
+    function renderTestSource() {
+      var x = document.getElementById('testScript');
+      var y = document.getElementById('testSource');
+      var testFuncStart = x.innerText.search('// START TEST') + 13;
+      var testFuncEnd = x.innerText.search('// END TEST');
+      y.innerText = x.innerText.substring(testFuncStart, testFuncEnd);
 
-    prettyPrint();
+      prettyPrint();
+    }
 
   });
 

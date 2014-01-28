@@ -36,6 +36,43 @@
     Polymer(name, thunk);
   };
 
+  // arbitrarily placing this patch here temporarily
+  // ShadowDOM needs a custom implementation for Node.normalize
+
+  if (window.ShadowDOMPolyfill) {
+    Node.prototype.normalize = function() {
+      var n = this.firstChild;
+      while (n) {
+        
+        while (true) {
+          while (n && n.nodeType !== Node.TEXT_NODE) {
+            n = n.nextSibling;
+          }
+          if (!n || n.textContent.length) {
+            break;
+          }
+          var empty = n;
+          n = n.nextSibling;
+          empty.remove();
+        }
+        
+        if (n) {
+          var content = n.textContent;
+          var nn = n.nextSibling;
+          while (nn && nn.nodeType === Node.TEXT_NODE) {
+            content += nn.textContent
+            var old = nn;
+            nn = nn.nextSibling;
+            old.parentNode.removeChild(old);
+          }
+          n.textContent = content;
+          n = nn;
+        }
+
+      }
+    }
+  }
+
   // exports
 
   window.marshal = marshal;

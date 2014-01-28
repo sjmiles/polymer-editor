@@ -9,6 +9,7 @@ module('type-writer', ['keycode-map'], function(KeyCodeMap) {
     range.setEnd(node, offset);
     window.getSelection().removeAllRanges();
     window.getSelection().addRange(range);
+    console.log('caret: %d, created range: %d - %d, getSelection().rangeCount: %s', offset, range.startOffset, range.endOffset, getSelection().rangeCount);
   }
 
   function type(text) {
@@ -27,7 +28,7 @@ module('type-writer', ['keycode-map'], function(KeyCodeMap) {
   }
 
   function keyEvent(type, key) {
-    var focus = document.activeElement;
+    var focus = wrap(document.activeElement);
     if (focus) {
       focus.dispatchEvent(makeKeyboardEvent(type, key));
     }
