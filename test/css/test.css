@@ -6,3 +6,23 @@ hr {
 strong {
   color: red;
 }
+em {
+  color: blue;
+}
+
+polymer-editor {
+  background: Ivory;
+  outline: none;
+  padding: 20px;
+}
+
+#testSource {
+  float: right;
+  width: 650px;
+  margin-left: 30px;
+  border: 1px solid black;
+}
+
+#left {
+  float: right;
+}

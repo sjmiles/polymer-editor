@@ -1,0 +1,74 @@
+﻿<!doctype html>
+<html>
+<meta charset="utf-8">
+<head>
+  <title>Editor Basic</title>
+
+  <script src="../../platform/platform.js"></script>
+  <script src="../polymer-module.js"></script>
+
+  <link rel="import" href="elements/preamble.html">
+
+</head>
+<body>
+
+  <pre id="testSource" class="prettyprint lang-js"></pre>
+
+  <h3>Basic text insert and delete</h3>
+  <p>
+    This page tests the basics of &lt;polymer-editor&gt;, in particular
+    it inserts text at the start, middle and end of existing text. and also
+    verifies that backspace within text will delete characters.
+  </p>
+  <hr/>
+
+  <polymer-editor id="my-editor">hello</polymer-editor>
+
+  <script id="testScript" type="text/javascript" charset="utf-8">
+
+  using(['type-writer'], function(Writer) {
+
+    var assert = chai.assert;
+
+    // START TEST
+
+    // make sure we have an editor - should probably test more than
+    // just the fact the element is defined... ?
+    var editor = document.querySelector('#my-editor');
+    var editor = document.querySelector('polymer-editor');
+    assert.isDefined(editor, 'our editor is defined');
+
+    // test insert text at start
+    Writer.placeCaret(editor.firstChild, 0);
+    Writer.type('foobar');
+    assert.equal(editor.innerText, 'foobarhello');
+
+    Writer.placeCaret(editor.firstChild, 6);
+    Writer.type('eggs');
+    assert.equal(editor.innerText, 'foobareggshello');
+
+    // test insert text at the end
+    Writer.placeCaret(editor.firstChild, editor.innerText.length);
+    Writer.type('world');
+    assert.equal(editor.innerText, 'foobareggshelloworld');
+
+    // test backspace
+    Writer.placeCaret(editor.firstChild, 6);
+    Writer.type('⟵⟵⟵⟵⟵⟵');
+    assert.equal(editor.innerText, 'eggshelloworld');
+
+    // END TEST
+
+    var x = document.getElementById('testScript');
+    var y = document.getElementById('testSource');
+    var testFuncStart = x.innerText.search('// START TEST') + 13;
+    var testFuncEnd = x.innerText.search('// END TEST');
+    y.innerText = x.innerText.substring(testFuncStart, testFuncEnd);
+
+    prettyPrint();
+
+  });
+
+  </script>
+</body>
+</html>

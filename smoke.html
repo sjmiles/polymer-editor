@@ -1,0 +1,25 @@
+﻿<!doctype html>
+<html>
+<head>
+  <title>polymer editor</title>
+  <script src="../platform/platform.js"></script>
+  <script src="polymer-module.js"></script>
+  <link rel="import" href="editor-elements/polymer-editor.html">
+  <link rel="import" href="editor-elements/x-html-p.html">
+  <link rel="import" href="editor-elements/x-html-span.html">
+  <style>
+    polymer-editor {
+      display: block;
+      border: 3px solid orange;
+      padding: 4px;
+    }
+  </style>
+</head>
+<body>
+  <polymer-editor autofocus>
+    <x-html-p>
+      <x-html-span>Now is the time for all good men to come to the aid of their party.</x-html-span>
+    </x-html-p>
+  </polymer-editor>
+</body>
+</html>

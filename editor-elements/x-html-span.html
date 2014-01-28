@@ -1,0 +1,50 @@
+<meta charset="UTF-8">
+
+<link rel="import" href="../../polymer/polymer.html">
+
+<link rel="import" href="polymer-editor-content.html">
+
+<polymer-element name="x-html-span" extends="polymer-editor-content">
+  <template>
+    <style>
+      :host {
+        display: inline;
+      }
+      * {
+      }
+    </style>
+    <content></content>
+  </template>
+
+  <script>
+
+  (function() {
+
+    Polymer('x-html-span', {
+
+      supports: function(editIntent, context) {
+        switch (editIntent) {
+          case 'mergeNode':
+            // TODO(jliebrand): should probably also support merging
+            // any type of inline element?
+            return context.node.nodeType === Node.TEXT_NODE;
+            break;
+
+          default:
+            return this.super(arguments);
+            break;
+        }
+      },
+
+      mergeNode: function(context) {
+        // insertNode will use appendChild or insertBefore; both of which
+        // will ensure the context.node gets MOVED if it was already in the dom
+        this.insertNode(context);
+      },
+
+    });
+
+  })();
+
+  </script>
+</polymer-element>
