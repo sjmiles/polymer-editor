@@ -1,0 +1,88 @@
+﻿<!doctype html>
+<html>
+<meta charset="utf-8">
+<head>
+  <title>Gmail Example</title>
+
+  <script src="../../platform/platform.js"></script>
+  <script src="../polymer-module.js"></script>
+
+  <link rel="import" href="elements/preamble.html">
+
+  <link rel="import" href="../editor-elements/x-html-p.html">
+  <link rel="import" href="../app-elements/gmail/x-gmail-reply.html">
+  <link rel="import" href="../app-elements/gmail/x-gmail-quote.html">
+
+</head>
+<body>
+
+  <pre id="testSource" class="prettyprint lang-js"></pre>
+
+  <h3>GMail block quote example</h3>
+  This example shows how in email, blockquotes can be handled
+  differently than normal HTML blockquotes. In that any edit, in particular
+  an enter key stroke in the middle of a blockquote, will break the quote
+  and allow the user to comment inline.
+
+  <hr/>
+
+  <polymer-editor id="my-editor">
+    <x-gmail-reply>
+      <x-gmail-quote>
+        <x-html-p>
+          The second reply to this email
+        </x-html-p>
+        <x-gmail-quote>
+          <x-html-p id="nestedReply">
+            The original reply to the email. Which is a bit longer so
+            that we can test breaking a multi line quote to reply to it
+          </x-html-p>
+      </x-gmail-quote>
+    </x-gmail-reply>
+  </polymer-editor>
+
+  <script id="testScript">
+
+  using(['type-writer'], function(Writer) {
+
+    var assert = chai.assert;
+
+    // START TEST
+
+    var editor = document.querySelector('polymer-editor');
+    var nestedReply = document.getElementById('nestedReply');
+
+    // hit enter in the middle of the nested reply. This should
+    // split the block quote and produce a blank <p> in the middle
+    // of the split blockquote
+    Writer.placeCaret(nestedReply.firstChild, 25);
+    Writer.type('↵');
+    // should have split the block quote and added an empty
+    // paragraph at root level. Eg, structure should be:
+    //
+    // qoute
+    //   para - the second reply
+    //   quote
+    //     para - the start of original reply
+    // para - empty
+    // quote
+    //   quote
+    //     para - the end of the origina reply
+    var strippedHtml = editor.innerHTML.replace(/\s/g, '');
+    assert.equal(strippedHtml, '<x-gmail-reply><x-gmail-quote><x-html-p>Thesecondreplytothisemail</x-html-p><x-gmail-quote><x-html-pid="nestedReply">Theoriginal</x-html-p></x-gmail-quote></x-gmail-quote><x-html-p></x-html-p><x-gmail-quote><x-gmail-quote><x-html-pid="nestedReply">replytotheemail.Whichisabitlongersothatwecantestbreakingamultilinequotetoreplytoit</x-html-p></x-gmail-quote></x-gmail-quote></x-gmail-reply>');
+
+    // END TEST
+
+    var x = document.getElementById('testScript');
+    var y = document.getElementById('testSource');
+    var testFuncStart = x.innerText.search('function test');
+    var testFuncEnd = x.innerText.search('var assert = chai.assert');
+    y.innerText = x.innerText.substring(testFuncStart, testFuncEnd);
+
+    prettyPrint();
+
+  });
+
+  </script>
+</body>
+</html>

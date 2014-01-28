@@ -1,0 +1,74 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../editor-utils/editor-utils.html">
+<link rel="import" href="polymer-editor-content.html">
+
+<polymer-element name="polymer-editor" extends="polymer-editor-content">
+
+<template>
+
+  <style>
+    :host {
+      -webkit-user-modify: read-write;
+      -webkit-user-select: text;
+    }
+  </style>
+
+  <content></content>
+
+</template>
+
+<script>
+
+(function(Input, Edit) {
+
+  Polymer('polymer-editor', {
+
+    eventDelegates: {
+      'keypress': 'doKey',
+      'keydown': 'doKey',
+      'insert-text': 'doEditIntent',
+      'delete-text': 'doEditIntent',
+      'split-tree': 'doEditIntent'
+    },
+
+    registerCallback: function() {
+      Input = marshal('mock-input');
+      Edit = marshal('dom-edit');
+    },
+
+    ready: function() {
+      this.tabIndex = 0;
+    },
+
+    attached: function() {
+      if (this.hasAttribute('autofocus')) {
+        this.focus();
+      }
+    },
+
+    // DOM key events
+
+    doKey: function(event) {
+      // ask the Element to convert the key to an edit intent
+      var edit = Input.intentFromKeyEvent(event);
+      if (edit) {
+        //console.log('preventing default', event)
+        event.preventDefault();
+        console.log(event.keyCode, edit.intent);
+        this.fire(edit.intent, edit.context, edit.node)
+      }
+    },
+
+    // Edit-intent events
+
+    doEditIntent: function(event, context) {
+      Edit.handleEditIntent(event.type, context);
+    }
+
+  });
+
+})();
+
+</script>
+
+</polymer-element>

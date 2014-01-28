@@ -1,0 +1,75 @@
+﻿<!doctype html>
+<html>
+<meta charset="utf-8">
+<head>
+  <title>Delete across elements Test</title>
+
+  <script src="../../platform/platform.js"></script>
+  <script src="../polymer-module.js"></script>
+
+  <link rel="import" href="elements/preamble.html">
+  <link rel="import" href="../editor-elements/x-html-p.html">
+  <link rel="import" href="../editor-elements/x-html-span.html">
+
+</head>
+<body>
+
+  <pre id="testSource" class="prettyprint lang-js"></pre>
+
+  <h3>Delete across elements</h3>
+  <p>
+    This page tests the ability to delete across elements, including the
+    behaviour of merging line elements between paragraphs.
+  </p>
+
+  <hr/>
+
+  <polymer-editor id="my-editor">
+    <x-html-p>
+      <x-html-span>hello</x-html-span><x-html-span>world</x-html-span>
+    </x-html-p>
+    <x-html-p>
+      <x-html-span>something else</x-html-span>
+    </x-html-p>
+  </polymer-editor>
+
+  <script id="testScript">
+
+  using(['type-writer'], function(Writer) {
+
+    var assert = chai.assert;
+
+    // START TEST
+
+    var editor = document.querySelector('polymer-editor');
+    var paras = editor.querySelectorAll('x-html-p');
+    var spans = editor.querySelectorAll('x-html-span');
+
+    // delete from 2nd span in to 1st span
+    Writer.placeCaret(spans[1].firstChild, 2);
+    Writer.type('⟵⟵⟵⟵');
+    assert.equal(paras[0].innerText, 'helrld');
+
+    // test merging one span in to the previous paragraphs
+    Writer.placeCaret(spans[2].firstChild, 0);
+    Writer.type('⟵');
+    assert.equal(paras[0].innerText, 'helrldsomething else');
+
+    var newParas = document.querySelectorAll('x-html-p');
+    assert.equal(newParas.length, paras.length -1);
+
+    // END TEST
+
+    var x = document.getElementById('testScript');
+    var y = document.getElementById('testSource');
+    var testFuncStart = x.innerText.search('// START TEST') + 13;
+    var testFuncEnd = x.innerText.search('// END TEST');
+    y.innerText = x.innerText.substring(testFuncStart, testFuncEnd);
+
+    prettyPrint();
+
+  });
+
+  </script>
+</body>
+</html>
